@@ -27,11 +27,18 @@ public class VendMach extends JFrame  {
  JLabel state;
  int quantity=0;
  int price;
+ JPanel p;
+ JFrame frame;
+ JButton coke;
+ int total;
+ int tens=0;
+ int fives=0;
+ JTextField ten,five;
     public VendMach (){
         
      state  = new JLabel("State");
     //    JTextField textstate = new JTextField(20);
-        JPanel p = new JPanel(new GridBagLayout());
+         p = new JPanel(new GridBagLayout());
         JButton buy =  new JButton("Buy");
         JLabel  qua = new JLabel("Quantity : "+quantity);
         JLabel  pri = new JLabel("Quantity : "+quantity);
@@ -40,7 +47,7 @@ public class VendMach extends JFrame  {
         constraints.insets = new Insets(10, 10, 10, 10);
          
         JButton pepsi = new JButton("Pepsi");
-        JButton coke = new JButton("Coke");
+         coke = new JButton("Coke");
         JButton chips = new JButton("Chips");
         
         constraints.gridx = 0;
@@ -68,10 +75,10 @@ public class VendMach extends JFrame  {
       
           
           state.setText("State : No Item Selected State");
-    JFrame frame = new JFrame("Vending Machine");
+    frame = new JFrame("Vending Machine");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.add(p);
-    frame.setSize(300, 200);
+    frame.setSize(500,300);
     frame.setVisible(true);
     
     
@@ -117,19 +124,89 @@ public class VendMach extends JFrame  {
       buy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            p.setVisible(false);
-                
-              JPanel mon = new JPanel(new GridBagLayout());
-              frame.add(mon);
-              mon.add(coke);
-              validate();
-              setVisible(true);
+          paymoney();
             }
         });
       
       
       
       
+    }
+    
+    public void paymoney ()
+    {
+          p.setVisible(false);
+               
+              JPanel mon = new JPanel(new GridBagLayout());
+              JLabel cost = new JLabel("Cost  "+ price);
+              JLabel tenl = new JLabel("Ten");
+              JLabel fivel = new JLabel("Five");
+              JButton ok = new JButton("Ok");
+              ten = new JTextField(3);
+              five = new JTextField(3);
+              
+              state.setText("State : No Money state  ");
+              
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(10, 10, 10, 10);
+        c.gridx = 0;
+        c.gridy = 0;   
+          mon.add(cost,c);
+         c.gridx = 0;
+         c.gridy = 3;
+           mon.add(state,c);    
+         c.gridx = 1;
+         c.gridy = 3;  
+            mon.add(ok,c);
+        c.gridx = 0;
+        c.gridy = 1;
+           mon.add(tenl,c);
+        c.gridx = 1;
+        c.gridy = 1;
+           mon.add(ten,c);
+        c.gridx = 2;
+        c.gridy = 1;
+           mon.add(fivel,c);
+        c.gridx = 3;
+        c.gridy = 1;
+           mon.add(five,c);
+           
+          
+           
+           
+           JLabel monent = new JLabel("Money Entered "+ total);
+           c.gridx = 0;
+           c.gridy = 2;
+           mon.add(monent);
+           
+           ok.addActionListener(new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+           if(ten != null || five != null){
+           tens = Integer.parseInt(ten.getText());
+           fives = Integer.parseInt(five.getText());
+           
+           total = tens*10 + fives*5;
+           
+            monent.setText("Money Entered "+ total);
+            state.setText("State : Money Entered State");
+           }
+           
+                
+              }
+          });
+           
+           
+          
+          
+          
+          
+          
+              frame.add(mon);
+              
+              validate();
+              setVisible(true);
     }
     public static void main(String[] args) {
         // TODO code application logic here
