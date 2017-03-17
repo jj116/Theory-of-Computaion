@@ -138,7 +138,7 @@ public class VendMach extends JFrame  {
           p.setVisible(false);
                
               JPanel mon = new JPanel(new GridBagLayout());
-              JLabel cost = new JLabel("Cost  "+ price);
+              JLabel cost = new JLabel("Cost Rs."+ price);
               JLabel tenl = new JLabel("Ten");
               JLabel fivel = new JLabel("Five");
               JButton ok = new JButton("Ok");
@@ -184,25 +184,41 @@ public class VendMach extends JFrame  {
               @Override
               public void actionPerformed(ActionEvent e) {
            if(ten != null || five != null){
-           tens = Integer.parseInt(ten.getText());
-           fives = Integer.parseInt(five.getText());
+                if(ten.getText().equals("")){
+         
+                }
+                else
+                {
+                   tens = Integer.parseInt(ten.getText());   
+                }
+                 if(five.getText().equals("")){
+          
+                 }
+                 else
+                 {
+                      fives = Integer.parseInt(five.getText());
+                 }
            
            total = tens*10 + fives*5;
            
             monent.setText("Money Entered "+ total);
             state.setText("State : Money Entered State");
+            
+                    if(total == price)
+                    {
+                         JOptionPane.showMessageDialog(frame.getComponent(0), "Collect your items");
+                         new VendMach().setVisible(true);
+                    }
+                    else if(total<price)
+                    {   int diff = price-total;
+                         JOptionPane.showMessageDialog(frame.getComponent(0),"Add Rs."+diff);
+                    }
            }
            
                 
               }
           });
-           
-           
-          
-          
-          
-          
-          
+                    
               frame.add(mon);
               
               validate();
