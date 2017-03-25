@@ -1,5 +1,5 @@
 # Theory-of-Computaion
 
-Ahana Raghuvanshi // ahanaraghuvanshi
-Ananjay Chagti // ananjayc
-Jaison Jose // jj116
+Ahana Raghuvanshi // ahanaraghuvanshi \n
+Ananjay Chagti // ananjayc \n
+Jaison Jose // jj116 \n
