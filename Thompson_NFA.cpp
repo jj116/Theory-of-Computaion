@@ -7,20 +7,20 @@
 using namespace std;
 
 
-struct trans {
+struct transition {
 	int vertex_from;
 	int vertex_to;
-	char trans_symbol;
+	char transition_symbol;
 };
 
 
-class NFA {
+class Non_Finite_Automata {
 public:
 	vector<int> vertex;
-	vector<trans> transitions;
+	vector<transition> transitions;
 	int final_state;
 
-	NFA() {
+	Non_Finite_Automata() {
 
 	}
 
@@ -34,12 +34,12 @@ public:
 		}
 	}
 
-	void set_transition(int vertex_from, int vertex_to, char trans_symbol) {
-		trans new_trans;
-		new_trans.vertex_from = vertex_from;
-		new_trans.vertex_to = vertex_to;
-		new_trans.trans_symbol = trans_symbol;
-		transitions.push_back(new_trans);
+	void set_transition(int vertex_from, int vertex_to, char transition_symbol) {
+		transition new_transition;
+		new_transition.vertex_from = vertex_from;
+		new_transition.vertex_to = vertex_to;
+		new_transition.transition_symbol = transition_symbol;
+		transitions.push_back(new_transition);
 	}
 
 	void set_final_state(int fs) {
@@ -51,11 +51,11 @@ public:
 	}
 
 	void display() {
-		trans new_trans;
+		transition new_transition;
 		cout<<"\n";
 		for(int i = 0; i < transitions.size(); i++) {
-			new_trans = transitions.at(i);
-			cout<<"q"<<new_trans.vertex_from<<" --> q"<<new_trans.vertex_to<<" : Symbol - "<<new_trans.trans_symbol<<endl;
+			new_transition = transitions.at(i);
+			cout<<"q"<<new_transition.vertex_from<<" --> q"<<new_transition.vertex_to<<" : Symbol - "<<new_transition.transition_symbol<<endl;
 		}
 		cout<<"\nThe final state is q"<<get_final_state()<<endl;
 	}
@@ -63,22 +63,22 @@ public:
 
 
 
-NFA concat(NFA a, NFA b) {
-	NFA result;
+Non_Finite_Automata concatinate(Non_Finite_Automata a, Non_Finite_Automata b) {
+	Non_Finite_Automata result;
 	result.set_vertex(a.get_vertex_count() + b.get_vertex_count());
 	int i;
-	trans new_trans;
+	transition new_transition;
 
 	for(i = 0; i < a.transitions.size(); i++) {
-		new_trans = a.transitions.at(i);
-		result.set_transition(new_trans.vertex_from, new_trans.vertex_to, new_trans.trans_symbol);
+		new_transition = a.transitions.at(i);
+		result.set_transition(new_transition.vertex_from, new_transition.vertex_to, new_transition.transition_symbol);
 	}
 
 	result.set_transition(a.get_final_state(), a.get_vertex_count(), '^');
 
 	for(i = 0; i < b.transitions.size(); i++) {
-		new_trans = b.transitions.at(i);
-		result.set_transition(new_trans.vertex_from + a.get_vertex_count(), new_trans.vertex_to + a.get_vertex_count(), new_trans.trans_symbol);
+		new_transition = b.transitions.at(i);
+		result.set_transition(new_transition.vertex_from + a.get_vertex_count(), new_transition.vertex_to + a.get_vertex_count(), new_transition.transition_symbol);
 	}
 
 	result.set_final_state(a.get_vertex_count() + b.get_vertex_count() - 1);
@@ -87,18 +87,18 @@ NFA concat(NFA a, NFA b) {
 }
 
 
-NFA kleene(NFA a) {
-	NFA result;
+Non_Finite_Automata STAR(Non_Finite_Automata a) {
+	Non_Finite_Automata result;
 	int i;
-	trans new_trans;
+	transition new_transition;
 	
 	result.set_vertex(a.get_vertex_count() + 2);
 
 	result.set_transition(0, 1, '^');
 
 	for(i = 0; i < a.transitions.size(); i++) {
-		new_trans = a.transitions.at(i);
-		result.set_transition(new_trans.vertex_from + 1, new_trans.vertex_to + 1, new_trans.trans_symbol);
+		new_transition = a.transitions.at(i);
+		result.set_transition(new_transition.vertex_from + 1, new_transition.vertex_to + 1, new_transition.transition_symbol);
 	}
 
 	result.set_transition(a.get_vertex_count(), a.get_vertex_count() + 1, '^');
@@ -111,12 +111,12 @@ NFA kleene(NFA a) {
 }
 
 
-NFA or_selection(vector<NFA> selections, int no_of_selections) {
-	NFA result;
+Non_Finite_Automata or_selection(vector<Non_Finite_Automata> selections, int no_of_selections) {
+	Non_Finite_Automata result;
 	int vertex_count = 2;
 	int i, j;
-	NFA med;
-	trans new_trans;
+	Non_Finite_Automata med;
+	transition new_transition;
 
 	for(i = 0; i < no_of_selections; i++) {
 		vertex_count += selections.at(i).get_vertex_count();
@@ -130,8 +130,8 @@ NFA or_selection(vector<NFA> selections, int no_of_selections) {
 		result.set_transition(0, adder_track, '^');
 		med = selections.at(i);
 		for(j = 0; j < med.transitions.size(); j++) {
-			new_trans = med.transitions.at(j);
-			result.set_transition(new_trans.vertex_from + adder_track, new_trans.vertex_to + adder_track, new_trans.trans_symbol);
+			new_transition = med.transitions.at(j);
+			result.set_transition(new_transition.vertex_from + adder_track, new_transition.vertex_to + adder_track, new_transition.transition_symbol);
 		}
 		adder_track += med.get_vertex_count();
 
@@ -143,18 +143,18 @@ NFA or_selection(vector<NFA> selections, int no_of_selections) {
 	return result;
 }
 
-NFA re_to_nfa(string re) {
+Non_Finite_Automata re_to_nfa(string re) {
 	stack<char> operators;
-	stack<NFA> operands;
+	stack<Non_Finite_Automata> operands;
 	char op_sym;
 	int op_count;
 	char cur_sym;
-	NFA *new_sym;
+	Non_Finite_Automata *new_sym;
 	
 	for(string::iterator it = re.begin(); it != re.end(); ++it) {
 		cur_sym = *it;
 		if(cur_sym != '(' && cur_sym != ')' && cur_sym != '*' && cur_sym != '|' && cur_sym != '.') {
-			new_sym = new NFA();
+			new_sym = new Non_Finite_Automata();
 			new_sym->set_vertex(2);
 			new_sym->set_transition(0, 1, cur_sym);
 			new_sym->set_final_state(1);
@@ -162,9 +162,9 @@ NFA re_to_nfa(string re) {
 			delete new_sym;
 		} else {
 			if(cur_sym == '*') {
-				NFA star_sym = operands.top();
+				Non_Finite_Automata star_sym = operands.top();
 				operands.pop();
-				operands.push(kleene(star_sym));
+				operands.push(STAR(star_sym));
 			} else if(cur_sym == '.') {
 				operators.push(cur_sym);
 			} else if(cur_sym == '|') {
@@ -181,19 +181,19 @@ NFA re_to_nfa(string re) {
 					op_count++;
 				} while(operators.top() != '(');
 				operators.pop();
-				NFA op1;
-				NFA op2;
-				vector<NFA> selections;
+				Non_Finite_Automata op1;
+				Non_Finite_Automata op2;
+				vector<Non_Finite_Automata> selections;
 				if(op_sym == '.') {
 					for(int i = 0; i < op_count; i++) {
 						op2 = operands.top();
 						operands.pop();
 						op1 = operands.top();
 						operands.pop();
-						operands.push(concat(op1, op2));
+						operands.push(concatinate(op1, op2));
 					}
 				} else if(op_sym == '|'){
-					selections.assign(op_count + 1, NFA());
+					selections.assign(op_count + 1, Non_Finite_Automata());
 					int tracker = op_count;
 					for(int i = 0; i < op_count + 1; i++) {
 						selections.at(tracker) = operands.top();
@@ -217,7 +217,7 @@ int main() {
 		<<"and returns its corresponding Non-Deterministic Finite Automaton \n\n";
 	cout<<"\n\nThe basic building blocks for constructing the NFA are : \n";
 
-	NFA a, b;
+	Non_Finite_Automata a, b;
 
 	cout<<"\nFor the regular expression segment : (a)";
 	a.set_vertex(2);
@@ -234,22 +234,22 @@ int main() {
 //	getch();
 
 	cout<<"\nFor the regular expression segment [Concatenation] : (a.b)";
-	NFA ab = concat(a, b);
+	Non_Finite_Automata ab = concatinate(a, b);
 	ab.display();
 //	getch();
 
-	cout<<"\nFor the regular expression segment [Kleene Closure] : (a*)";
-	NFA a_star = kleene(a);
+	cout<<"\nFor the regular expression segment [STAR Closure] : (a*)";
+	Non_Finite_Automata a_star = STAR(a);
 	a_star.display();
 //	getch();
 
 	cout<<"\nFor the regular expression segment [Or] : (a|b)";
 	int no_of_selections;
 	no_of_selections = 2;
-	vector<NFA> selections(no_of_selections, NFA());
+	vector<Non_Finite_Automata> selections(no_of_selections, Non_Finite_Automata());
 	selections.at(0) = a;
 	selections.at(1) = b;
-	NFA a_or_b = or_selection(selections, no_of_selections);
+	Non_Finite_Automata a_or_b = or_selection(selections, no_of_selections);
 	a_or_b.display();	
 //	getch();
 
@@ -264,26 +264,16 @@ int main() {
 		<<"> Enclose the entire regular expression with parantheses \n\n";
 
 	cout<<"For example : \nFor the regular expression (a.(b|c))  -- \n";
-	NFA example_nfa = re_to_nfa("(a.(b|c))");
+	Non_Finite_Automata example_nfa = re_to_nfa("(a.(b|c))");
 	example_nfa.display();
 	
 	cout<<"\n\nEnter the regular expression in the above mentioned format - \n\n";
 	cin>>re;
 
-/*	char cur_sym;
-	int counter = 0;
-	for(string::iterator it = re.begin(); it != re.end(); ++it) {
-		cur_sym = (*it);
-		if(cur_sym != '(' && cur_sym != ')' && cur_sym != '*' && cur_sym != '|' && cur_sym != '.') {
-			cout<<cur_sym<<" "<<counter++<<endl;
-			symbols.insert(cur_sym);
-		}
-	}
-*/
 
-	cout<<"\n\nThe required NFA has the transitions : \n\n";
+	cout<<"\n\nThe required Non_Finite_Automata has the transitions : \n\n";
 	
-	NFA required_nfa;
+	Non_Finite_Automata required_nfa;
 	required_nfa = re_to_nfa(re);
 	required_nfa.display();	
 
