@@ -8,11 +8,9 @@ Jaison Jose // jj116
 
 All the Modules have been completed.
 
-For the first module we took in 
+For the first module we took in the pattern and compared it to the string which we take a input and check if 
+the pattern is found in the string.
 
-
-For the Second module we 
-
-
+For the Second module we input the NFA and implement the Thompson Algorithm.
 
 For the Third Module we created a GUI which represents a State Machine using JPanel.
